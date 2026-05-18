@@ -77,6 +77,29 @@ app.get('/stu/remove', async (req, res) => {
   }
 });
 
+app.get('/stu/edit', async (req, res) => {
+  // console.log(req.query)
+  const { stuNo } = req.query;
+  const dept = "소프트웨어";
+
+  try {
+    const result = await connection.execute(
+      `UPDATE STUDENT SET STU_DEPT = :dept WHERE STU_NO = :stuNo`,
+      [dept, stuNo],
+      {autoCommit : true}
+    );
+    console.log(result);
+    await connection.commit();
+
+    res.json({
+        result : "success",
+    });
+  } catch (error) {
+    console.error('Error executing query', error);
+    res.status(500).send('Error executing query');
+  }
+});
+
 
 app.listen(3000, () => {
   console.log('Server is running on http://localhost:3000')
