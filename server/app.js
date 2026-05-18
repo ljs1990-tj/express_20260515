@@ -60,18 +60,20 @@ app.delete('/student/:stuNo', async (req, res) => {
   console.log(req.params)
   const { stuNo } = req.params;
 
-  // try {
-  //   const result = await connection.execute(`DELETE FROM STUDENT WHERE STU_NO = ${stuNo}`);
-  //   console.log(result);
-  //   await connection.commit();
+  try {
+    const result = await connection.execute(
+      `DELETE FROM STUDENT WHERE STU_NO = :stuNo`,
+      [stuNo],
+      {autoCommit : true}
+    );
 
-  //   res.json({
-  //       result : "success",
-  //   });
-  // } catch (error) {
-  //   console.error('Error executing query', error);
-  //   res.status(500).send('Error executing query');
-  // }
+    res.json({
+        result : "success",
+    });
+  } catch (error) {
+    console.error('Error executing query', error);
+    res.status(500).send('Error executing query');
+  }
 });
 
 
