@@ -5,6 +5,7 @@ const oracledb = require('oracledb');
 
 const app = express();
 app.use(cors());
+app.use(express.json())
 
 // ejs 설정
 app.set('view engine', 'ejs');
@@ -64,6 +65,27 @@ app.delete('/student/:stuNo', async (req, res) => {
     const result = await connection.execute(
       `DELETE FROM STUDENT WHERE STU_NO = :stuNo`,
       [stuNo],
+      {autoCommit : true}
+    );
+
+    res.json({
+        result : "success",
+    });
+  } catch (error) {
+    console.error('Error executing query', error);
+    res.status(500).send('Error executing query');
+  }
+});
+
+app.post('/student', async (req, res) => {
+  console.log("POST 호출!")
+  console.log(req.body)
+  const { stuNo, stuName, stuDept, stuGrade } = req.body;
+
+  try {
+    const result = await connection.execute(
+      `INSERT INTO STUDENT(STU_NO, STU_NAME, STU_DEPT, STU_GRADE) VALUES(:stuNo, :stuName, :stuDept, :stuGrade)`,
+      [stuNo, stuName, stuDept, stuGrade],
       {autoCommit : true}
     );
 
