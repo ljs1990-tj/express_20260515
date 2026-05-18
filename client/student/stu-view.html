@@ -24,21 +24,7 @@
 <body>
     <div id="app">
         <!-- html 코드는 id가 app인 태그 안에서 작업 -->
-        <div>
-            <label>학번 : <input v-model="info.stuNo" disabled></label>
-        </div>
-        <div>
-            <label>이름 : <input v-model="info.stuName"></label>
-        </div>
-        <div>
-            <label>학과 : <input v-model="info.stuDept"></label>
-        </div>
-        <div>
-            <label>학년 : <input v-model="info.stuGrade"></label>
-        </div> 
-        <div>
-            <button @click="fnEdit">수정</button>
-        </div>
+        {{info}}
     </div>
 </body>
 </html>
@@ -66,21 +52,6 @@
                         console.log(data.info);
                         self.info = data.info;
                         
-                    })
-            },
-            fnEdit : function(){
-                let self = this;
-                fetch("http://localhost:3000/student/"+self.info.stuNo, {
-                    method : "PUT",
-                    headers : {
-                       "Content-type" : "application/json"
-                    },
-                    body : JSON.stringify(self.info)
-                })
-                    .then(res => res.json())
-                    .then(data => {
-                        alert("수정되었습니다!");
-                        location.href="stu-list.html"
                     })
             }
         }, // methods

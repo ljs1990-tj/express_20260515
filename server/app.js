@@ -36,6 +36,27 @@ async function startServer() {
 
 startServer();
 
+// user
+app.post('/login', async (req, res) => {
+  const { userId, pwd } = req.body;
+  try {
+    const result = await connection.execute(
+      `SELECT * FROM TBL_USER WHERE USERID = :userId AND PWD = :pwd`,
+      [userId, pwd],
+      // result 안에 rows는 키 안에 json형태로 db데이터를 반환
+      {outFormat: oracledb.OUT_FORMAT_OBJECT}
+    );
+    
+    res.json({
+        result : "success",
+        list : result.rows
+    });
+  } catch (error) {
+    console.error('Error executing query', error);
+    res.status(500).send('Error executing query');
+  }
+});
+
 // RESTful API 적용
 app.get('/student', async (req, res) => {
   const { } = req.query;
