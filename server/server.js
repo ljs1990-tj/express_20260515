@@ -58,6 +58,31 @@ app.get('/stu/list', async (req, res) => {
   }
 });
 
+app.get('/stu/remove', async (req, res) => {
+  console.log(req.query)
+  const { } = req.query;
+  // try {
+  //   const result = await connection.execute(`SELECT * FROM STUDENT`);
+  //   const columnNames = result.metaData.map(column => column.name);
+  //   // 쿼리 결과를 JSON 형태로 변환
+  //   const rows = result.rows.map(row => {
+  //     // 각 행의 데이터를 컬럼명에 맞게 매핑하여 JSON 객체로 변환
+  //     const obj = {};
+  //     columnNames.forEach((columnName, index) => {
+  //       obj[columnName] = row[index];
+  //     });
+  //     return obj;
+  //   });
+  //   res.json({
+  //       result : "success",
+  //       list : rows
+  //   });
+  // } catch (error) {
+  //   console.error('Error executing query', error);
+  //   res.status(500).send('Error executing query');
+  // }
+});
+
 
 app.listen(3000, () => {
   console.log('Server is running on http://localhost:3000')

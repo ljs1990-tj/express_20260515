@@ -31,11 +31,13 @@
                     <td>학번</td>
                     <td>이름</td>
                     <td>학과</td>
+                    <td>삭제</td>
                 </tr>
                 <tr v-for="item in list">
                     <td>{{item.STU_NO}}</td>
                     <td>{{item.STU_NAME}}</td>
                     <td>{{item.STU_DEPT}}</td>
+                    <td><button @click="fnRemove(item.STU_NO)">삭제</button></td>
                 </tr>
             </table>
         </div>
@@ -60,6 +62,16 @@
                     .then(data => {
                         console.log(data);
                         self.list = data.list;
+                    })
+            },
+            fnRemove : function(STU_NO){
+                let self = this;
+                fetch("http://localhost:3000/stu/remove?stuNo="+STU_NO)
+                    .then(res => res.json())
+                    .then(data => {
+                        console.log(data);
+                        alert("삭제 됨!");
+                        self.fnUserList();
                     })
             }
         }, // methods
