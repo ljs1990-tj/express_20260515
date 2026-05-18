@@ -23,22 +23,7 @@
 </head>
 <body>
     <div id="app">
-        <!-- html. 반드시 id가 app인 태그 안에서 작업 -->
-        <!-- (script 맨 하단 app.mount('#app'); 여기 아이디와 같아야 함) -->
-        <div>
-            <table>
-                <tr>
-                    <td>학번</td>
-                    <td>이름</td>
-                    <td>학과</td>
-                </tr>
-                <tr v-for="item in list">
-                    <td>{{item.STU_NO}}</td>
-                    <td>{{item.STU_NAME}}</td>
-                    <td>{{item.STU_DEPT}}</td>
-                </tr>
-            </table>
-        </div>
+        <!-- html 코드는 id가 app인 태그 안에서 작업 -->
     </div>
 </body>
 </html>
@@ -48,24 +33,22 @@
         data() {
             return {
                 // 변수 - (key : value)
-                list : []
             };
         },
         methods: {
             // 함수(메소드) - (key : function())
-            fnUserList: function () {
+            fnList: function () {
                 let self = this;
-                fetch("http://localhost:3000/stu/list")
+                fetch("")
                     .then(res => res.json())
                     .then(data => {
-                        console.log(data);
-                        self.list = data.list;
+
                     })
             }
         }, // methods
         mounted() {
             // 처음 시작할 때 실행되는 부분
-            this.fnUserList();
+            let self = this;
         }
     });
 

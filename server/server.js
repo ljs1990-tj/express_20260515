@@ -27,7 +27,7 @@ async function initializeDatabase() {
 initializeDatabase();
 
 app.get('/', (req, res) => {
-  res.send('Hello World')
+  res.send('Hello World HaHa')
 })
 
 app.get('/test', (req, res) => {
