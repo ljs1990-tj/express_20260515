@@ -25,7 +25,7 @@
     <div id="app">
         <!-- html 코드는 id가 app인 태그 안에서 작업 -->
         <div>
-            <label>학번 : <input v-model="info.stuNo"></label>
+            <label>학번 : <input v-model="info.stuNo" disabled></label>
         </div>
         <div>
             <label>이름 : <input v-model="info.stuName"></label>
@@ -37,7 +37,7 @@
             <label>학년 : <input v-model="info.stuGrade"></label>
         </div> 
         <div>
-            <button @click="fnAdd">등록</button>
+            <button @click="fnEdit">수정</button>
         </div>
     </div>
 </body>
@@ -58,10 +58,20 @@
         },
         methods: {
             // 함수(메소드) - (key : function())
-            fnAdd: function () {
+            fnGetInfo: function () {
                 let self = this;
-                fetch("http://localhost:3000/student", {
-                    method : "POST",
+                fetch("http://localhost:3000/student/"+self.info.stuNo)
+                    .then(res => res.json())
+                    .then(data => {
+                        console.log(data.info);
+                        self.info = data.info;
+                        
+                    })
+            },
+            fnEdit : function(){
+                let self = this;
+                fetch("http://localhost:3000/student/"+self.info.stuNo, {
+                    method : "PUT",
                     headers : {
                        "Content-type" : "application/json"
                     },
@@ -77,6 +87,9 @@
         mounted() {
             // 처음 시작할 때 실행되는 부분
             let self = this;
+            const queryParams = new URLSearchParams(window.location.search);
+            self.info.stuNo = queryParams.get('stuNo') || ''; 
+            self.fnGetInfo();
         }
     });
 

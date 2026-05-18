@@ -64,6 +64,7 @@
                 fetch("http://localhost:3000/student")
                     .then(res => res.json())
                     .then(data => {
+                        console.log(data)
                         self.list = data.list;
                     })
             },
