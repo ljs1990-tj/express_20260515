@@ -46,10 +46,24 @@ app.post('/login', async (req, res) => {
       // result 안에 rows는 키 안에 json형태로 db데이터를 반환
       {outFormat: oracledb.OUT_FORMAT_OBJECT}
     );
+    console.log(result.rows); 
+    let message = "";
+    let info = {}
+    
+    if(result.rows.length > 0){
+      message = "success";
+      info = {
+        userId : result.rows[0].USERID,
+        userName : result.rows[0].USERNAME,
+      }
+    } else {
+      // 로그인 실패
+      message = "fail";
+    }
     
     res.json({
-        result : "success",
-        list : result.rows
+        message : message,
+        info : info
     });
   } catch (error) {
     console.error('Error executing query', error);
