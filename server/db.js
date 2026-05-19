@@ -5,7 +5,7 @@ const dbConfig = {
     password: 'test1234',
     connectString: 'localhost/xe',
     poolMin: 1,
-    poolMax: 5,
+    poolMax: 100,
     poolIncrement: 1
 };
 

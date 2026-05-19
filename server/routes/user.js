@@ -1,7 +1,10 @@
 const express = require('express');
 const oracledb = require('oracledb');
 const db = require("../db");
+const bcrypt = require('bcrypt');
 const router = express.Router();
+
+const saltRounds = 10;
 
 // user
 router.post('/login', async (req, res) => {
@@ -9,8 +12,8 @@ router.post('/login', async (req, res) => {
   try {
     let connection = await db.getConnection();
     const result = await connection.execute(
-      `SELECT * FROM TBL_USER WHERE USERID = :userId AND PWD = :pwd`,
-      [userId, pwd],
+      `SELECT * FROM TBL_USER WHERE USERID = :userId`,
+      [userId],
       // result 안에 rows는 키 안에 json형태로 db데이터를 반환
       {outFormat: oracledb.OUT_FORMAT_OBJECT}
     );
@@ -19,13 +22,21 @@ router.post('/login', async (req, res) => {
     let info = {}
     
     if(result.rows.length > 0){
-      message = "success";
-      info = {
-        userId : result.rows[0].USERID,
-        userName : result.rows[0].USERNAME,
+      let match = await bcrypt.compare(pwd, result.rows[0].PWD);
+      if(match){
+          message = "success";
+          info = {
+            userId : result.rows[0].USERID,
+            userName : result.rows[0].USERNAME,
+          }
+      } else {
+        // 비밀번호 틀림
+        message = "fail";
       }
+
+      
     } else {
-      // 로그인 실패
+      // 로그인 실패 - 아이디도 맞는거 없음
       message = "fail";
     }
     
@@ -41,12 +52,12 @@ router.post('/login', async (req, res) => {
 
 router.post('/join', async (req, res) => {
   const { userId, pwd, userName } = req.body;
-
+  const hashPwd = await bcrypt.hash(pwd, saltRounds);
   try {
     let connection = await db.getConnection();
     const result = await connection.execute(
-      `INSERT INTO TBL_USER(USERID, PWD, USERNAME) VALUES(:userId, :pwd, :userName)`,
-      [userId, pwd, userName],
+      `INSERT INTO TBL_USER(USERID, PWD, USERNAME) VALUES(:userId, :hashPwd, :userName)`,
+      [userId, hashPwd, userName],
       {autoCommit : true}
     );
     console.log(result);

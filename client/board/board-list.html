@@ -49,7 +49,9 @@
                 </tr>
                 <tr v-for="item in list">
                     <td>{{item.boardNo}}</td>
-                    <td>{{item.title}}</td>
+                    <td>
+                        <a href="javascript:;" @click="fnView(item.boardNo)">{{item.title}}</a>
+                    </td>
                     <td>{{item.userId}}</td>
                     <td>{{item.cnt}}</td>
                     <td>{{item.cDateTime}}</td>
@@ -79,6 +81,9 @@
                     .then(data => {
                         self.list = data.list;
                     })
+            },
+            fnView : function(boardNo){
+                location.href="board-view.html?boardNo="+boardNo;                
             }
         }, // methods
         mounted() {

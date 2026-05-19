@@ -2,6 +2,9 @@ const express = require('express');
 const cors = require('cors');
 const path = require('path');
 const oracledb = require('oracledb');
+var QRCode = require('qrcode')
+
+// router
 const studentRouter = require("./routes/student");
 const userRouter = require("./routes/user");
 const boardRouter = require("./routes/board");
@@ -35,6 +38,21 @@ async function startServer() {
     process.exit(1); // DB 연결 실패 시 프로세스 종료 (선택 사항)
   }
 }
+
+app.get("/qrcode", async (req, res)=>{
+  try{
+
+    let qrImg = await QRCode.toDataURL("https://www.naver.com");
+    res.send(
+      `
+        <img src=${qrImg}>
+      `
+    )
+  }catch(err){
+    console.log(err);
+  }
+})
+
 
 startServer();
 
