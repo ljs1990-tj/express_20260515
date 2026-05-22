@@ -8,6 +8,7 @@ var QRCode = require('qrcode')
 const studentRouter = require("./routes/student");
 const userRouter = require("./routes/user");
 const boardRouter = require("./routes/board");
+const productRouter = require("./routes/product");
 const db = require("./db");
 
 const app = express();
@@ -18,9 +19,10 @@ app.use(express.json())
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, '.')); // .은 경로
 
-app.use("/student", studentRouter)
-app.use("/user", userRouter)
-app.use("/board", boardRouter)
+app.use("/student", studentRouter);
+app.use("/user", userRouter);
+app.use("/board", boardRouter);
+app.use("/product", productRouter);
 
 let connection;
 
@@ -29,8 +31,8 @@ async function startServer() {
     await db.init();
     console.log('Successfully connected to Oracle database');
 
-    app.listen(3000, () => {
-      console.log('Server is running on port 3000');
+    app.listen(3010, () => {
+      console.log('Server is running on port 3010');
     });
 
   } catch (err) {
