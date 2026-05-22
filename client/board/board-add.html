@@ -25,20 +25,13 @@
     <div id="app">
         <!-- html 코드는 id가 app인 태그 안에서 작업 -->
         <div>
-            <label>아이디 : 
-                <input v-if="!result" v-model="userId" >
-                <input v-else v-model="userId" disabled>
-            </label>
-            <button @click="fnIdCheck">중복체크</button>
-        </div> 
+            <label>제목 : <input v-model="info.title"></label>
+        </div>
         <div>
-            <label>비밀번호 : <input v-model="pwd" type="password"></label>
-        </div> 
+            <label>내용 : <input v-model="info.contents"></label>
+        </div>
         <div>
-            <label>이름 : <input v-model="userName" ></label>
-        </div> 
-        <div>
-            <button @click="fnJoin">회원가입</button>
+            <button @click="fnAdd">저장</button>
         </div>
     </div>
 </body>
@@ -49,48 +42,30 @@
         data() {
             return {
                 // 변수 - (key : value)
-                userId : "",
-                pwd : "",
-                userName : "",
-                result : false
+                info : {
+                    title : "",
+                    contents : "",
+                    userId : "test"
+                }
             };
         },
         methods: {
             // 함수(메소드) - (key : function())
-            fnJoin: function () {
+            fnAdd : function(){
                 let self = this;
-                if(!self.result){
-                    alert("중복체크 후 이용해주셈");
-                    return;
-                }
-                fetch("http://localhost:3000/user/join",{
+                fetch("http://localhost:3000/board", {
                     method : "POST",
                     headers : {
                         "Content-type" : "application/json"
                     },
-                    body : JSON.stringify({
-                        userId : self.userId,
-                        pwd : self.pwd,
-                        userName : self.userName
-                    })
+                    body : JSON.stringify(self.info) 
                 })
                     .then(res => res.json())
                     .then(data => {
-                        console.log(data);
-                        alert("회원가입 축하!");
+                        alert("저장되었습니다");
+                        location.href="board-list.html";
                     })
-            },
-            fnIdCheck : function(){
-                let self = this;
-                // 4글자 이상 return
 
-                fetch("http://localhost:3000/user/check/"+self.userId)
-                    .then(res => res.json())
-                    .then(data => {
-                        console.log(data)
-                        alert(data.message)
-                        self.result = data.result;
-                    })
             }
         }, // methods
         mounted() {

@@ -33,8 +33,6 @@ router.post('/login', async (req, res) => {
         // 비밀번호 틀림
         message = "fail";
       }
-
-      
     } else {
       // 로그인 실패 - 아이디도 맞는거 없음
       message = "fail";
@@ -68,6 +66,37 @@ router.post('/join', async (req, res) => {
     }
     res.json({
         result : "success",
+    });
+  } catch (error) {
+    console.error('Error executing query', error);
+    res.status(500).send('Error executing query');
+  }
+});
+
+router.get('/check/:userId', async (req, res) => {
+  const { userId } = req.params;
+ 
+  try {
+    let connection = await db.getConnection();
+    const result = await connection.execute(
+      `SELECT * FROM TBL_USER WHERE USERID = :userId`,
+      [userId],
+      {outFormat: oracledb.OUT_FORMAT_OBJECT}
+    );
+    
+    let r = "";
+    if(result.rows.length > 0){
+      // 이미 사용중인 아이디
+      r = false;
+      message = "이미 사용중인 아이디 입니다."
+    } else {
+      // 사용 가능한 아이디
+      r = true;
+      message = "사용가능한 아이디 입니다."
+    }
+    res.json({
+        result : r,
+        message : message
     });
   } catch (error) {
     console.error('Error executing query', error);
