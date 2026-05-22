@@ -51,4 +51,33 @@ router.get('/:productId', async (req, res) => {
   }
 });
 
+router.post('/', async (req, res) => {
+  const { id, name, brand, price, desc } = req.body;
+  let pId = id;
+  let desciption = desc;
+  console.log(req.body);
+  let connection;
+  try {
+    connection = await db.getConnection();
+    const result = await connection.execute(
+      `
+        INSERT INTO PRODUCT(PRODUCT_ID, PRODUCT_NAME, BRAND, PRICE, DESCRIPTION) 
+        VALUES(:pId, :name, :brand, :price, :desciption)
+      `,
+      [ pId, name, brand, price, desciption ],
+      // result 안에 rows는 키 안에 json형태로 db데이터를 반환
+      {autoCommit : true}
+    );
+    
+    res.json({
+        result : "success"
+    });
+  } catch (error) {
+    console.error('Error executing query', error);
+    res.status(500).send('Error executing query');
+  } finally {
+    connection.close();
+  }
+});
+
 module.exports = router;
