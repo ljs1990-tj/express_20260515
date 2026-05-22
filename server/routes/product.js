@@ -27,4 +27,28 @@ router.get('/', async (req, res) => {
   }
 });
 
+router.get('/:productId', async (req, res) => {
+  const { productId } = req.params;
+  let connection;
+  try {
+    connection = await db.getConnection();
+    const result = await connection.execute(
+      `SELECT * FROM PRODUCT WHERE PRODUCT_ID = :productId`,
+      [productId],
+      // result 안에 rows는 키 안에 json형태로 db데이터를 반환
+      {outFormat: oracledb.OUT_FORMAT_OBJECT}
+    );
+    
+    res.json({
+        result : "success",
+        info : result.rows[0]
+    });
+  } catch (error) {
+    console.error('Error executing query', error);
+    res.status(500).send('Error executing query');
+  } finally {
+    connection.close();
+  }
+});
+
 module.exports = router;
